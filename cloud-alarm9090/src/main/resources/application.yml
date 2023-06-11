@@ -1,0 +1,43 @@
+
+server:
+  port: 9090
+
+
+dingding:
+  # 钉钉网路狗子地址
+  webhook: https://oapi.dingtalk.com/robot/send?access_token=37a2fc4d24d9c5bc752644fda450d2741768c7eed0520f87f58a6072c00aa4f9
+  # 秘钥
+  secret: SEC899d5d856685d59a612acc020e239ad404bcd5ba4be362ca1c6c077bd03f01a5
+
+
+spring:
+  mail:
+    # 配置 SMTP 服务器地址
+    host: smtp.qq.com
+    # 发送者邮箱
+    username: 877910962@qq.com
+    # 配置密码，注意不是真正的密码，而是刚刚申请到的授权码
+    password: updkummbtnuxbbga
+    # 默认的邮件编码为UTF-8
+    default-encoding: UTF-8
+    properties:
+        mail:
+          smtp:
+            #需要验证用户名密码
+            auth: true
+          starttls:
+            # 设置为配置SMTP连接的属性。要使用STARTTLS，必须设置以下属性
+            enable: true
+            required: true
+
+
+
+
+
+
+
+
+
+logging:
+  pattern:
+    console: logging.pattern.console=%d{MM/dd HH:mm:ss.SSS} %clr(%-5level) ---  [%-15thread] %cyan(%-50logger{50}):%msg%n

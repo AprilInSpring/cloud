@@ -1,0 +1,46 @@
+server:
+  port: 8001
+eureka:
+  instance:
+    # 实例名字
+    instance-id: cloud-provider8001
+  client:
+    service-url:
+      # 指定单机eureka server地址
+      #defaultZone: http://localhost:7001/eureka/
+      defaultZone: http://localhost:7001/eureka/,http://localhost:7002/eureka/
+spring:
+  application:
+    name: cloud-provider
+
+  rabbitmq:
+   host: 192.168.66.101
+   port: 5672
+   username: guest
+   password: guest
+  cloud:
+    stream:
+      bindings:
+       # 广播消息  生产者绑定名字   out生产者   0固定写法
+         myBroadcat-out-0:
+            #对应的真是RabbitMQ exchange
+            destination: my-broadcat-topic
+        # 分组消费
+         myGroup-out-0:
+           destination: my-group-topic
+
+
+
+
+
+
+
+
+
+
+
+
+logging:
+
+  pattern:
+    console: logging.pattern.console=%d{MM/dd HH:mm:ss.SSS} %clr(%-5level) ---  [%-15thread] %cyan(%-50logger{50}):%msg%n

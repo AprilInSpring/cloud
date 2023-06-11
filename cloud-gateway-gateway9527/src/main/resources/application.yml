@@ -1,0 +1,95 @@
+server:
+  port: 9527
+
+eureka:
+  instance:
+    # 实例名字
+    instance-id: cloud-gateway-gateway9527
+  client:
+    service-url:
+      # 指定单机eureka server地址
+      #defaultZone: http://localhost:7001/eureka/
+      defaultZone: http://localhost:7001/eureka/,http://localhost:7002/eureka/
+spring:
+#  # 分布式链路追踪
+#  sleuth:
+#    sampler:
+#      # 采样率的概率，100%采样
+#      probability: 1.0
+#      # 每秒采样数字最⾼为100
+#      rate: 1000
+#  zipkin:
+#    sender:
+#      type: rabbit
+#    rabbitmq:
+#      # rabbitmq地址
+#      queue: zipkin
+#      addresses: 192.168.66.101:5672
+  application:
+    name: cloud-gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowCredentials: true
+            allowedOriginPatterns: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+        add-to-simple-url-handler-mapping: true
+      # 路由配置
+      routes:
+        - id: cloud-auth-user
+          uri: lb://CLOUD-AUTH-USER
+          predicates:
+            - Path=/user/*
+         # http://localhost/order/index
+        # 路由id 没有具体规则要求  但是有一个点 唯一
+        - id: cloud-order-consumer
+          # 目标服务地址
+          uri: http://localhost:80
+          # 路由条件 断言会接收一个输入参数，返回一个布尔结果值
+          # http://localhost:9527/order/index
+          predicates:
+            - Path=/order/*
+        - id: cloud-provider-payment
+          # 目标服务地址 lb 后面是微服务名字  lb
+          uri: lb://CLOUD-PAYMENT-PROVIDER
+          # 路由条件 断言会接收一个输入参数，返回一个布尔结果值
+          # http://localhost:9527/order/index
+          predicates:
+              - Path=/payment/*
+#              - After=2030-02-15T14:54:23.317+08:00[Asia/Shanghai]
+#              - Before=2030-02-15T14:54:23.317+08:00[Asia/Shanghai]
+#              - Between=2030-02-15T14:54:23.317+08:00[Asia/Shanghai],2030-02-15T14:54:23.317+08:00[Asia/Shanghai]
+#              - Cookie=username,zzyy
+#              - Header=X-Request-Id, \d+
+#              - Host=itbaizhan
+#              - Method=GET
+#              - Query=username,\d+
+#         filters:
+#            # 修改原始响应状态码
+#            - SetStatus=250
+          filters:
+            - Log=true
+
+
+
+
+
+
+
+
+org:
+  my:
+    jwt:
+      # 跳过认证路由
+      skipAuthUrls:
+        - /user/login
+
+
+logging:
+  pattern:
+    console: logging.pattern.console=%d{MM/dd HH:mm:ss.SSS} %clr(%-5level) ---  [%-15thread] %cyan(%-50logger{50}):%msg%n
+#  level:
+#    org.springframework.cloud.sleuth: debug

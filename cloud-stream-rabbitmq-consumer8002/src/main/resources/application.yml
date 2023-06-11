@@ -1,0 +1,51 @@
+server:
+port: 8002
+eureka:
+  instance:
+    # 实例名字
+    instance-id: cloud-consumer8002
+  client:
+    service-url:
+      # 指定单机eureka server地址
+      #defaultZone: http://localhost:7001/eureka/
+      defaultZone: http://localhost:7001/eureka/,http://localhost:7002/eureka/
+spring:
+  application:
+    name: cloud-consumer
+
+  rabbitmq:
+    host: 192.168.66.101
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    function:
+      # 定义出消费者
+      definition: myBroadcat;myGroup
+    stream:
+      bindings:
+        # 广播消息  生产者绑定名字   out生产者  in消费者  0固定写法
+        myBroadcat-in-0:
+          #对应的真是RabbitMQ exchange
+          destination: my-broadcat-topic
+
+        # 分组消费
+        myGroup-in-0:
+          destination: my-group-topic
+          # 同一个分组内消费服务。 只能有一个消费者消费到消息
+          group: my-group-1
+
+
+
+
+
+
+
+
+
+
+
+logging:
+
+  pattern:
+    console: logging.pattern.console=%d{MM/dd HH:mm:ss.SSS} %clr(%-5level) ---  [%-15thread] %cyan(%-50logger{50}):%msg%n
